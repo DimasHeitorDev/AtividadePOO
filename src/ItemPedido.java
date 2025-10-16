@@ -12,6 +12,14 @@ public class ItemPedido {
         return this.produto.getPreco() * this.quantidade;
     }
 
+    public void adicionarQuantidade(int quantidade) {
+        this.quantidade += quantidade;
+    }
+
+    public Produto getProduto() {
+        return this.produto;
+    }
+
     public int getQuantidade() {
         return this.quantidade;
     }

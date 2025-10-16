@@ -11,7 +11,10 @@ public class PagamentoCartaoCredito implements IPagamento {
             this.statusPagamento = StatusPagamento.APROVADO;
             return true;
         }
-        return false;
+        else {
+            this.statusPagamento = StatusPagamento.RECUSADO;
+            return false;
+        }
     }
 
     public StatusPagamento getStatus() {

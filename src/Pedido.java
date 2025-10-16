@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Pedido {
@@ -8,7 +9,21 @@ public class Pedido {
     private IPagamento metodoPagamento;
     private StatusPedido statusPedido;
 
+    public Pedido(Cliente cliente) {
+        this.cliente = cliente;
+        this.itens = new ArrayList<>();
+        this.data = LocalDate.now();
+    }
+
     public void adicionarItem(Produto produto, int quantidade) {
+        for (ItemPedido ip: this.itens) {
+            if (ip.getProduto().id.equals(produto.id))
+            {
+                ip.adicionarQuantidade(quantidade);
+                return;
+            }
+        }
+
         itens.add(new ItemPedido(produto, quantidade));
     }
 
@@ -28,7 +43,18 @@ public class Pedido {
     }
 
     public boolean confirmarPedido() {
-        return metodoPagamento.processarPagamento(calcularTotal());
+        if (this.statusPedido != StatusPedido.PENDENTE)
+                return false;
+        if (this.metodoPagamento != null)
+                return false;
+
+        boolean resultado = metodoPagamento.processarPagamento(this.calcularTotal());
+        if (resultado)
+                this.statusPedido = StatusPedido.PROCESSANDO;
+        else
+            this.statusPedido = StatusPedido.PENDENTE;
+
+        return resultado;
     }
 
     public List<ItemPedido> getItens() {
